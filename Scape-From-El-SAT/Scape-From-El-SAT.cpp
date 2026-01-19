@@ -1,9 +1,17 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "iostream"
 #include "Windows.h"
+#include "conio.h"
 #include "Character.h"
 #include "Print.h"
 
+struct Hitbox {
+	int x1;
+	int y1;
+
+	int x2;
+	int y2;
+};
 void terminalSize(int& ancho, int& alto) {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -52,58 +60,119 @@ void printSAT() {
 	resetColor();
 }
 
+
+void satAttack(int x, int y) {
+	gotoXY(x, y); // x-3  y-5
+	setColorRGB(230, 2, 2);
+	std::cout << "18    ";
+}
+
 int main() {
 	Character you;
+
+	Hitbox player{
+		0,0,0,0
+	};
+
+	Hitbox attack{
+		0,0,0,0
+	};
+
 	int x = 0, y = 0;
-	gotoXY(x, y);
 	terminalSize(x, y);
+
+	int cX = x / 3;
+	int cY = y - 3;
+	int i = 90;
+	int score = 0;
+
 	char input = ' ';
 
+	bool attacking = false;
+
 	while (you.health > 0) {
+
+		if (i >= 100) {
+			attacking = !attacking;
+			i = 0;
+			score += 100;
+		}
 		gotoXY(0, y / 2);
 		printSAT();
 		setColorRGB(96, 97, 102);
 		printLine(x);
 
-		switch (input) {
-		case 'q':
-			
-			break;
+		you.printTopCharacter(cX, cY - 2);
+		you.printLegs1(cX, cY);
+		Sleep(150);
+		you.printLegs2(cX, cY);
+		Sleep(150);
 
-		case ' ':
-
-			input = 's';
-			break;
-
-		case 's':
-
-			input = 'z';
-			break;
-
-		case 'z':
-		case 'Z':
-			you.printTopCharacter(x / 3, y - 5);
-			you.printLegs1(x / 3, y - 3);
-			Sleep(150);
-			you.printLegs2(x / 3, y - 3);
-
-			Sleep(150);
-			you.printLegs3(x / 3, y - 3);
-
-			Sleep(150);
-			you.printLegs4(x / 3, y - 3);
-
-			Sleep(150);
-
-			break;
-
+		if (attacking) {
+			satAttack(x - i - 3, y - 5);
 		}
-		
+		else {
+			i += rand() % 50;
+		}
+		if (_kbhit) {
+			if (_getch() == ' ') {
+
+			}
+		}
+
+		i++;
+
+		you.printLegs3(cX, cY);
+
+		Sleep(150);
+		you.printLegs4(cX, cY);
+
+		Sleep(150);
+		i++;
+		if (attacking) {
+			satAttack(x - i - 3, y - 5);
+			i += 2;
+		}
 	}
 }
 
 //Discarted Code
 
+//void gameStart(Character you, int x, int y ) {
+//
+//	int cX = x / 3;
+//	int cY = y - 3;
+//
+//	switch (_getch()) {
+//	case 'q':
+//
+//		break;
+//
+//	case ' ':
+//		you.printTopCharacter(cX, cY - 5);
+//		you.printLegs1(cX, cY - 3);
+//
+//		system("cls");
+//		break;
+//
+//	case 'z':
+//	case 'Z':
+//		you.printTopCharacter(cX, cY - 2);
+//		you.printLegs1(cX, cY);
+//		Sleep(150);
+//		you.printLegs2(cX, cY);
+//
+//		Sleep(150);
+//		you.printLegs3(cX, cY);
+//
+//		Sleep(150);
+//		you.printLegs4(cX, cY);
+//
+//		Sleep(150);
+//		system("cls");
+//		break;
+//	}
+//}
 //struct Sprite {
 //	int width;
 //	int tall;
