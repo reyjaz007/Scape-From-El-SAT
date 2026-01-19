@@ -1,16 +1,8 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "iostream"
 #include "Windows.h"
-#include "cstdio"
-#include "vector"
 #include "Character.h"
-
-void gotoXY(int x, int y) {
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
+#include "Print.h"
 
 void terminalSize(int& ancho, int& alto) {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -18,31 +10,6 @@ void terminalSize(int& ancho, int& alto) {
 	ancho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
 	alto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }//funciones terminalSize y gotoXY son funciones ya creadas 
-
-void setColorRGB(int r, int g, int b) {
-	std::cout << "\033[38;2;" << r << ";" << g << ";" << b << "m";
-}
-
-void resetColor() {
-	std::cout << "\033[0m";
-}
-
-void print() {
-	char square = 219;
-	std::cout << square;
-}
-
-void printLine(int x) {
-	for (int i = 0; i < x; i++) {
-		print();
-	}
-}
-
-void printSpace(int x) {
-	for (int i = 0; i < x; i++) {
-		std::cout << " ";
-	}
-}
 
 void topSAT() {
 	printSpace(4);
@@ -83,6 +50,56 @@ void printSAT() {
 	printFigure(0, 6, 3, 1, 4, 1, 4, 2);
 
 	resetColor();
+}
+
+int main() {
+	Character you;
+	int x = 0, y = 0;
+	gotoXY(x, y);
+	terminalSize(x, y);
+	char input = ' ';
+
+	while (you.health > 0) {
+		gotoXY(0, y / 2);
+		printSAT();
+		setColorRGB(96, 97, 102);
+		printLine(x);
+
+		switch (input) {
+		case 'q':
+			
+			break;
+
+		case ' ':
+
+			input = 's';
+			break;
+
+		case 's':
+
+			input = 'z';
+			break;
+
+		case 'z':
+		case 'Z':
+			you.printTopCharacter(x / 3, y - 5);
+			you.printLegs1(x / 3, y - 3);
+			Sleep(150);
+			you.printLegs2(x / 3, y - 3);
+
+			Sleep(150);
+			you.printLegs3(x / 3, y - 3);
+
+			Sleep(150);
+			you.printLegs4(x / 3, y - 3);
+
+			Sleep(150);
+
+			break;
+
+		}
+		
+	}
 }
 
 //Discarted Code
@@ -190,20 +207,3 @@ void printSAT() {
 //	readingProtocol(sat);
 //	printingProtocol(sat);
 //}
-
-
-int main() {
-	Character you;
-	int x = 0, y = 0;
-	gotoXY(x, y);
-	terminalSize(x, y);
-
-	while (you.health > 0) {
-		gotoXY(0, y / 2);
-		printSAT();
-		setColorRGB(96, 97, 102);
-		printLine(x);
-	}
-
-
-}
