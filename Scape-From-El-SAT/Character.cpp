@@ -14,13 +14,8 @@ int Character::takeDamage(int damage) {
 	return health -= damage;
 }
 
-int Character::useDash() {
-	return stamina--;
-}
-
 void Character::displayInfo() {
 	std::cout << "your health: " << health << std::endl;
-	std::cout << "your stamina: " << stamina << std::endl;
 }
 
 void Character::printLegs1(int x, int y) {

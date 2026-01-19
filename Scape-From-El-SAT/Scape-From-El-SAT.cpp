@@ -1,7 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#include "iostream"
-#include "Windows.h"
-#include "conio.h"
+#include <iostream>
+#include <Windows.h>
+#include <conio.h>
 #include "Character.h"
 #include "Print.h"
 
@@ -12,6 +12,7 @@ struct Hitbox {
 	int x2;
 	int y2;
 };
+
 void terminalSize(int& ancho, int& alto) {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -60,11 +61,19 @@ void printSAT() {
 	resetColor();
 }
 
+void printMap(int x, int y) {
+	gotoXY(0, y / 2);
+	printSAT();
+	setColorRGB(96, 97, 102);
+	printLine(x);
+	resetColor();
+}
 
 void satAttack(int x, int y) {
 	gotoXY(x, y); // x-3  y-5
 	setColorRGB(230, 2, 2);
-	std::cout << "18    ";
+	std::cout << "18";
+	resetColor();
 }
 
 int main() {
@@ -83,60 +92,78 @@ int main() {
 
 	int cX = x / 3;
 	int cY = y - 3;
-	int i = 90;
+	int attackTimer = 0;
+	int attackX = 0;
 	int score = 0;
 
 	char input = ' ';
 
 	bool attacking = false;
+	bool jumping = false;
+
+	srand(time(nullptr));
 
 	while (you.health > 0) {
 
-		if (i >= 100) {
-			attacking = !attacking;
-			i = 0;
-			score += 100;
-		}
-		gotoXY(0, y / 2);
-		printSAT();
-		setColorRGB(96, 97, 102);
-		printLine(x);
-
-		you.printTopCharacter(cX, cY - 2);
-		you.printLegs1(cX, cY);
-		Sleep(150);
-		you.printLegs2(cX, cY);
-		Sleep(150);
-
-		if (attacking) {
-			satAttack(x - i - 3, y - 5);
-		}
-		else {
-			i += rand() % 50;
-		}
-		if (_kbhit) {
-			if (_getch() == ' ') {
-
-			}
-		}
-
-		i++;
-
-		you.printLegs3(cX, cY);
-
-		Sleep(150);
-		you.printLegs4(cX, cY);
-
-		Sleep(150);
-		i++;
-		if (attacking) {
-			satAttack(x - i - 3, y - 5);
-			i += 2;
-		}
 	}
 }
 
 //Discarted Code
+
+//while (you.health > 0) {
+//
+//	if (i >= 100) {
+//		attacking = !attacking;
+//		i = 0;
+//		score += 100;
+//	}
+//	system("cls");
+//	printMap(x, y);
+//
+//	if (_kbhit()) {
+//		if (_getch() == ' ') {
+//			jumping = true;
+//		}
+//	}
+//	jumping = false;
+//
+//	you.printTopCharacter(cX, cY - 2);
+//	jumping ? you.printLegs1(cX, cY - 1) : you.printLegs1(cX, cY);
+//
+//	Sleep(150);
+//	system("cls");
+//	printMap(x, y);
+//	jumping ? you.printLegs2(cX, cY - 2) : you.printLegs2(cX, cY);
+//
+//
+//	Sleep(150);
+//
+//	if (attacking) {
+//		satAttack(x - i - 3, y - 5);
+//	}
+//	else {
+//		i += rand() % 50;
+//	}
+//
+//	i++;
+//	system("cls");
+//	printMap(x, y);
+//	jumping ? you.printLegs3(cX, cY - 4) : you.printLegs3(cX, cY);
+//
+//
+//	Sleep(150);
+//	system("cls");
+//	printMap(x, y);
+//	jumping ? you.printLegs4(cX, cY - 2) : you.printLegs4(cX, cY);
+//
+//
+//	Sleep(150);
+//	i++;
+//	if (attacking) {
+//		satAttack(x - i - 3, y - 5);
+//		i += 2;
+//	}
+//}
 
 //void gameStart(Character you, int x, int y ) {
 //
