@@ -13,6 +13,30 @@ struct Hitbox {
 	int y2;
 };
 
+struct XY {
+	int x;
+	int y;
+};
+
+Hitbox CharacterHitboxUpdate(Hitbox box, int x, int y) {
+	box.x1 = x;
+	box.y1 = y;
+
+	box.x2 = x + 3;
+	box.y2 = y - 5;
+	return box;
+}
+
+Hitbox attackHitboxUpdate(Hitbox box, int x, int y) {
+	box.x1 = x;
+	box.y1 = y;
+
+	box.x2 = x + 1;
+	box.y2 = y;
+
+	return box;
+}
+
 void verifyinput(bool& jumping) {
 	jumping = false;
 	if (_kbhit()) {
@@ -31,12 +55,16 @@ void gameupdate(bool &attacking, int &attackTimer, int &attackX) {//add fisics f
 	attackTimer >= 100 ? attacking = true, attackTimer = 0 : attackTimer += rand() % 50;
 }
 
-void renderGame(Character& you, int &animation, int x, int y, int cX, int cY, int &attackX, bool attacking) {
+void renderGame(Character& you, Hitbox &player, Hitbox &attack, int &animation, int x, int y, int cX, int cY, int &attackX, int &attackY, bool attacking) {
 	printMap(x, y);
 	animation = you.printCharacter(animation, cX, cY);
+	player = CharacterHitboxUpdate(player, cX, cY);
+
 	if (attacking) {
-		erase(x - attackX + 2, cY - 2, 2);
-		satAttack(x - attackX, cY - 2);
+		attackXYUpdate(x,cY,attackX, attackY);
+		attackHitboxUpdate(attack, attackX, attackY);
+		erase(attackX + 2, attackY, 2);
+		satAttack(attackX , attackY);
 		attackX += 2;
 	}
 }
@@ -52,14 +80,22 @@ int main() {
 		0,0,0,0
 	};
 
-	int x = 0, y = 0;
-	terminalSize(x, y);
+	XY terminal{
+		0,0
+	};
 
-	int cX = x / 3;
-	int cY = y - 3;
+	terminalSize(terminal.x, terminal.y);
+
+	XY character{
+		terminal.x / 3,
+		terminal.y - 3
+	};
+
+	XY attackXY{
+		0,0
+	};	
+	
 	int attackTimer = 0;
-	int attackX = 0;
-	int attackY = 0;
 	int score = 0;
 	int animation = 1;
 
@@ -70,8 +106,9 @@ int main() {
 
 	while (you.health > 0) {
 		verifyinput(jumping);
-		gameupdate(attacking, attackTimer, attackX);
-		renderGame(you, animation, x, y, cX, cY,attackX, attacking);
+		gameupdate(attacking, attackTimer, attackXY.x);
+		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking);
+		//hitboxverify(); {if hitbox player == hitbox attack { takedamage(x);}}
 		Sleep(100);
 	}
 }

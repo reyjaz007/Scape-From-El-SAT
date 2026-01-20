@@ -26,4 +26,6 @@ void printMap(int x, int y);
 
 void satAttack(int x, int y);
 
+void attackXYUpdate(int x, int y, int &aX, int &aY);
+
 void erase(int x, int y, int length);
