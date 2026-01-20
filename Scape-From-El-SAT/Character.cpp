@@ -102,9 +102,30 @@ int Character::printCharacter(int animation, int x, int y) {
 	}
 }
 
-int Character::printJumpingCharacter(int animation, int x, int y)){
+int Character::printJumpingCharacter(int animation,int &jump, int x, int y){
+
+	if (velocity == jump && jump != 0) {
+		jump -= gravity;
+		animation = printCharacter(animation, x, y - jump);
+		return animation;
+	}
+
+	erase(x, y - jump, 4, 0, 0);
+	jump += (velocity / 4);
 	
+	animation = printCharacter(animation, x, y - jump);
+	return animation;
 }
+
+int Character::calculateFisics(int gravity, int strength, int time) {
+	this->gravity = gravity;
+	this->strength = strength;
+	this->time = time;
+
+	Character::velocity = strength - gravity;
+	return Character::velocity;
+}
+
 
 // ███ 247, 208, 153
 // ███

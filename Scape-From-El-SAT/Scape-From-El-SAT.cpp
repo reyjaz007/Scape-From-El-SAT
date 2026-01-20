@@ -38,7 +38,6 @@ Hitbox attackHitboxUpdate(Hitbox box, int x, int y) {
 }
 
 void verifyinput(bool& jumping) {
-	jumping = false;
 	if (_kbhit()) {
 		if (_getch() == ' ') {
 			jumping = true;
@@ -55,22 +54,24 @@ void gameupdate(bool &attacking, int &attackTimer, int &attackX) {//add fisics f
 	attackTimer >= 100 ? attacking = true, attackTimer = 0 : attackTimer += rand() % 50;
 }
 
-void renderGame(Character& you, Hitbox &player, Hitbox &attack, int &animation, int x, int y, int cX, int cY, int &attackX, int &attackY, bool attacking) {
+void renderGame(Character& you, Hitbox &player, Hitbox &attack, int &animation, int x, int y, int cX, int cY, int &attackX, int &attackY, bool attacking, bool jumping, int &jump) {
 	printMap(x, y);
-	animation = you.printCharacter(animation, cX, cY);
+	jumping ? animation = you.printJumpingCharacter(animation, jump, cX, cY) : animation = you.printCharacter(animation, cX, cY);
 	player = CharacterHitboxUpdate(player, cX, cY);
 
 	if (attacking) {
-		attackXYUpdate(x,cY,attackX, attackY);
-		attackHitboxUpdate(attack, attackX, attackY);
-		erase(attackX + 2, attackY, 2);
-		satAttack(attackX , attackY);
+		attackYUpdate(cY, attackY);
+		attackHitboxUpdate(attack, x - attackX, attackY);
+		erase(x - attackX, attackY, 2, 2, 0);
+		satAttack(x - attackX, attackY);
 		attackX += 2;
 	}
+	
 }
 
 int main() {
 	Character you;
+	you.calculateFisics(1, 5, 4);
 
 	Hitbox player{
 		0,0,0,0
@@ -98,6 +99,7 @@ int main() {
 	int attackTimer = 0;
 	int score = 0;
 	int animation = 1;
+	int jump = 0;
 
 	bool attacking = false;
 	bool jumping = false;
@@ -107,7 +109,7 @@ int main() {
 	while (you.health > 0) {
 		verifyinput(jumping);
 		gameupdate(attacking, attackTimer, attackXY.x);
-		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking);
+		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking, jumping, jump);
 		//hitboxverify(); {if hitbox player == hitbox attack { takedamage(x);}}
 		Sleep(100);
 	}

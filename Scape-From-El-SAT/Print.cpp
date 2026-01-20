@@ -97,12 +97,11 @@ void satAttack(int x, int y) {
 	resetColor();
 }
 
-void attackXYUpdate(int x, int y, int &aX, int &aY) {
-	aX -= x;
+void attackYUpdate( int y, int &aY) {
 	aY = y - 2;
 }
 
-void erase(int x, int y, int length) {
-	gotoXY(x, y);
+void erase(int x, int y, int length, int offsetX, int offsetY) {
+	gotoXY(x + offsetX, y + offsetY);
 	printSpace(length);
 }
