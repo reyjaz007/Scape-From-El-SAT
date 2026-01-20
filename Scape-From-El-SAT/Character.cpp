@@ -18,7 +18,7 @@ void Character::displayInfo() {
 	std::cout << "your health: " << health << std::endl;
 }
 
-void Character::printLegs1(int x, int y) {
+void printLegs1(int x, int y) {
 	gotoXY(x, y);
 	setColorRGB(205, 206, 212);
 	printSimpleFigure(0, 1, 1);
@@ -27,7 +27,7 @@ void Character::printLegs1(int x, int y) {
 	printSimpleFigure(0, 1, 1);
 }
 
-void Character::printLegs2(int x, int y) {
+void printLegs2(int x, int y) {
 	gotoXY(x, y);
 	setColorRGB(205, 206, 212);
 	printSimpleFigure(0, 2, 0);
@@ -36,7 +36,7 @@ void Character::printLegs2(int x, int y) {
 	printSimpleFigure(1, 1, 0);
 }
 
-void Character::printLegs3(int x, int y) {
+void printLegs3(int x, int y) {
 	gotoXY(x, y);
 	setColorRGB(205, 206, 212);
 	printSimpleFigure(1, 0, 1);
@@ -45,7 +45,7 @@ void Character::printLegs3(int x, int y) {
 	printSimpleFigure(1, 0, 1);
 }
 
-void Character::printLegs4(int x, int y) {
+void printLegs4(int x, int y) {
 	gotoXY(x, y);
 	setColorRGB(205, 206, 212);
 	printSimpleFigure(1, 1, 0);
@@ -54,7 +54,7 @@ void Character::printLegs4(int x, int y) {
 	printSimpleFigure(0, 1, 1);
 }
 
-void Character::printTopCharacter(int x, int y) {
+void printTopCharacter(int x, int y) {
 	gotoXY(x, y);
 	setColorRGB(247, 208, 153);
 	print();
@@ -75,6 +75,31 @@ void Character::printTopCharacter(int x, int y) {
 	gotoXY(x, y - 3);
 	printSpace(1);
 	printLine(3);
+}
+
+int Character::printCharacter(int animation, int x, int y) {
+	int yTop = y - 2;
+	switch (animation)
+	{
+	case 1:
+		printLegs1(x, y);
+		printTopCharacter(x, yTop);
+		return 2;
+	case 2:
+		printLegs2(x, y);
+		printTopCharacter(x, yTop);
+		return 3;
+	case 3:
+		printLegs3(x, y);
+		printTopCharacter(x, yTop);
+		return 4;
+	case 4:
+		printLegs4(x, y);
+		printTopCharacter(x, yTop);
+		return 1;
+	default:
+		break;
+	}
 }
 
 // ███ 247, 208, 153

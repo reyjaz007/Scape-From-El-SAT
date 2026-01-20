@@ -13,67 +13,32 @@ struct Hitbox {
 	int y2;
 };
 
-void terminalSize(int& ancho, int& alto) {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-	ancho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-	alto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-}//funciones terminalSize y gotoXY son funciones ya creadas 
-
-void topSAT() {
-	printSpace(4);
-	printLine(6);
-	printSpace(3);
-	printLine(6);
-	std::cout << std::endl;
-}
-
-void printFigure(int a, int b, int c, int d, int e, int f, int g, int h) {
-	printSpace(a);
-	printLine(b);
-	printSpace(c);
-	printLine(d);
-	printSpace(e);
-	printLine(f);
-	printSpace(g);
-	printLine(h);
-	std::cout << std::endl;
-}
-
-void printSAT() {
-	setColorRGB(40, 50, 137);
-	
-	for (int i = 0; i < 3; i++) {
-		topSAT();
+void verifyinput(bool& jumping) {
+	jumping = false;
+	if (_kbhit()) {
+		if (_getch() == ' ') {
+			jumping = true;
+		}
 	}
-	std::cout << std::endl;
-	for (int i = 0; i < 3; i++) {
-		topSAT();
+}
+
+void gameupdate(bool &attacking, int &attackTimer, int &attackX) {//add fisics for jump (maybe?)
+	srand(time(nullptr));
+	if (attackX >= 100) {
+		attacking = false;
+		attackX = 0;
 	}
-	std::cout << std::endl;
-
-	printFigure(0, 6, 3, 6, 2, 6, 0, 0);
-	printFigure(0, 1, 8, 1, 4, 1, 4, 2);
-	printFigure(1, 4, 4, 6, 4, 2, 0, 0);
-	printFigure(5, 1, 3, 1, 4, 1, 4, 2);
-	printFigure(0, 6, 3, 1, 4, 1, 4, 2);
-
-	resetColor();
+	attackTimer >= 100 ? attacking = true, attackTimer = 0 : attackTimer += rand() % 50;
 }
 
-void printMap(int x, int y) {
-	gotoXY(0, y / 2);
-	printSAT();
-	setColorRGB(96, 97, 102);
-	printLine(x);
-	resetColor();
-}
-
-void satAttack(int x, int y) {
-	gotoXY(x, y); // x-3  y-5
-	setColorRGB(230, 2, 2);
-	std::cout << "18";
-	resetColor();
+void renderGame(Character& you, int &animation, int x, int y, int cX, int cY, int &attackX, bool attacking) {
+	printMap(x, y);
+	animation = you.printCharacter(animation, cX, cY);
+	if (attacking) {
+		erase(x - attackX + 2, cY - 2, 2);
+		satAttack(x - attackX, cY - 2);
+		attackX += 2;
+	}
 }
 
 int main() {
@@ -94,17 +59,20 @@ int main() {
 	int cY = y - 3;
 	int attackTimer = 0;
 	int attackX = 0;
+	int attackY = 0;
 	int score = 0;
-
-	char input = ' ';
+	int animation = 1;
 
 	bool attacking = false;
 	bool jumping = false;
 
-	srand(time(nullptr));
+	system("cls");
 
 	while (you.health > 0) {
-
+		verifyinput(jumping);
+		gameupdate(attacking, attackTimer, attackX);
+		renderGame(you, animation, x, y, cX, cY,attackX, attacking);
+		Sleep(100);
 	}
 }
 
