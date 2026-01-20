@@ -102,6 +102,10 @@ int Character::printCharacter(int animation, int x, int y) {
 	}
 }
 
+int Character::printJumpingCharacter(int animation, int x, int y)){
+	
+}
+
 // ███ 247, 208, 153
 // ███
 //████
