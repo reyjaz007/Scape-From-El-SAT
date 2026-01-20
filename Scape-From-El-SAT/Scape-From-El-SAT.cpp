@@ -54,10 +54,10 @@ void gameupdate(bool &attacking, int &attackTimer, int &attackX) {//add fisics f
 	attackTimer >= 100 ? attacking = true, attackTimer = 0 : attackTimer += rand() % 50;
 }
 
-void renderGame(Character& you, Hitbox &player, Hitbox &attack, int &animation, int x, int y, int cX, int cY, int &attackX, int &attackY, bool attacking, bool jumping, int &jump) {
+void renderGame(Character& you, Hitbox& player, Hitbox& attack, int& animation, int x, int y, int cX, int cY, int& attackX, int& attackY, bool attacking, bool& jumping, bool& falling, int& jump) {
 	printMap(x, y);
-	jumping ? animation = you.printJumpingCharacter(animation, jump, cX, cY) : animation = you.printCharacter(animation, cX, cY);
-	player = CharacterHitboxUpdate(player, cX, cY);
+	jumping ? animation = you.printJumpingCharacter(animation, jump, cX, cY, jumping, falling) : animation = you.printCharacter(animation, cX, cY);
+	player = CharacterHitboxUpdate(player, cX, cY - jump);
 
 	if (attacking) {
 		attackYUpdate(cY, attackY);
@@ -67,6 +67,10 @@ void renderGame(Character& you, Hitbox &player, Hitbox &attack, int &animation, 
 		attackX += 2;
 	}
 	
+}
+
+int hitboxVerification(Hitbox player, Hitbox attack) {
+	return 0;
 }
 
 int main() {
@@ -103,13 +107,14 @@ int main() {
 
 	bool attacking = false;
 	bool jumping = false;
+	bool falling = false;
 
 	system("cls");
 
 	while (you.health > 0) {
 		verifyinput(jumping);
 		gameupdate(attacking, attackTimer, attackXY.x);
-		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking, jumping, jump);
+		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking, jumping, falling, jump);
 		//hitboxverify(); {if hitbox player == hitbox attack { takedamage(x);}}
 		Sleep(100);
 	}

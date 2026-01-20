@@ -2,10 +2,10 @@
 #pragma once
 class Character {
 private:
-	int velocity;
-	int gravity;
-	int strength;
-	int time;
+	int velocity = 0;
+	int gravity = 0;
+	int strength = 0;
+	int time = 0;
 
 public:
 	int health = 100;
@@ -23,7 +23,8 @@ public:
 
 	int printCharacter(int animation, int x, int y);
 
-	int printJumpingCharacter(int animation, int& jump, int x, int y);
+	int printJumpingCharacter(int animation, int& jump, int x, int y, bool& jumping, bool& falling);
 
+	bool fallingAction(int& animation, int& jump, int x, int y, bool& jumping);
 };
 
