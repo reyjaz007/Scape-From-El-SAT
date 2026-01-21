@@ -18,12 +18,15 @@ struct XY {
 	int y;
 };
 
-Hitbox CharacterHitboxUpdate(Hitbox box, int x, int y) {
-	box.x1 = x;
-	box.y1 = y;
+Hitbox CharacterHitboxUpdate(Hitbox box, int x, int y, int jump) {
+	int height = 5;
+	int width = 3;
 
-	box.x2 = x + 3;
-	box.y2 = y - 5;
+	box.x1 = x;
+	box.x2 = x + width;
+
+	box.y2 = y - jump;
+	box.y1 = box.y2 - height;
 	return box;
 }
 
@@ -31,21 +34,22 @@ Hitbox attackHitboxUpdate(Hitbox box, int x, int y) {
 	box.x1 = x;
 	box.y1 = y;
 
-	box.x2 = x + 1;
+	box.x2 = box.x1 +1;
 	box.y2 = y;
 
 	return box;
 }
 
-void verifyinput(bool& jumping) {
+void verifyinput(bool& jumping, bool& falling) {
 	if (_kbhit()) {
 		if (_getch() == ' ') {
 			jumping = true;
+			falling = false;
 		}
 	}
 }
 
-void gameupdate(bool &attacking, int &attackTimer, int &attackX) {//add fisics for jump (maybe?)
+void gameupdate(bool &attacking, int &attackTimer, int &attackX) {
 	srand(time(nullptr));
 	if (attackX >= 100) {
 		attacking = false;
@@ -57,32 +61,61 @@ void gameupdate(bool &attacking, int &attackTimer, int &attackX) {//add fisics f
 void renderGame(Character& you, Hitbox& player, Hitbox& attack, int& animation, int x, int y, int cX, int cY, int& attackX, int& attackY, bool attacking, bool& jumping, bool& falling, int& jump) {
 	printMap(x, y);
 	jumping ? animation = you.printJumpingCharacter(animation, jump, cX, cY, jumping, falling) : animation = you.printCharacter(animation, cX, cY);
-	player = CharacterHitboxUpdate(player, cX, cY - jump);
+	player = CharacterHitboxUpdate(player, cX, cY, jump);
 
+	gotoXY(0, 0);
+	std::cout << player.x1 << ", " << player.x2 << "  " << player.y1 << ", " << player.y2 << std::endl;
 	if (attacking) {
 		attackYUpdate(cY, attackY);
-		attackHitboxUpdate(attack, x - attackX, attackY);
+		attack = attackHitboxUpdate(attack, x - attackX, attackY);
 		erase(x - attackX, attackY, 2, 2, 0);
 		satAttack(x - attackX, attackY);
 		attackX += 2;
 	}
+	gotoXY(0, 1);
+	std::cout << attack.x1 << ", " << attack.x2 << "  " << attack.y1 << ", " << attack.y2 << "  " << std::endl;
 	
 }
 
 int hitboxVerification(Hitbox player, Hitbox attack) {
-	return 0;
+	if (attack.x2 < player.x1 || attack.x1 > player.x2 || attack.y2 < player.y1 || attack.y1 > player.y2) {
+		return 0;
+	}
+	return 100;
+}
+
+void gameStart(int x, int y) {
+	system("cls");
+	paintTerminal(x, y, 162, 184, 183);
+	setBackColorRGB(162, 184, 183);
+	printSAT((x / 2)- 11, (y / 2) -12);
+
+	setBackColorRGB(162, 184, 183);
+	setColorRGB(58, 64, 63);
+
+	gotoXY((x / 2) - 9, (y / 2) + 2);
+	std::cout << "Scape From El SAT";
+	gotoXY((x / 2) - 16, (y / 2) + 5);
+	system("pause");
+	resetColor();
+	system("cls");
+}
+
+void gameEnd(int x, int y) {
+	system("cls");
+
 }
 
 int main() {
 	Character you;
-	you.calculateFisics(1, 5, 4);
+	you.calculateFisics(1, 6, 5);
 
 	Hitbox player{
 		0,0,0,0
 	};
 
 	Hitbox attack{
-		0,0,0,0
+		120,26,121,26
 	};
 
 	XY terminal{
@@ -109,15 +142,19 @@ int main() {
 	bool jumping = false;
 	bool falling = false;
 
-	system("cls");
+	//start
+	gameStart(terminal.x, terminal.y);
 
-	while (you.health > 0) {
-		verifyinput(jumping);
+	while (you.health >= 0) {//game loop
+		verifyinput(jumping, falling);
 		gameupdate(attacking, attackTimer, attackXY.x);
 		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking, jumping, falling, jump);
-		//hitboxverify(); {if hitbox player == hitbox attack { takedamage(x);}}
+		you.takeDamage(hitboxVerification(player, attack));
 		Sleep(100);
 	}
+
+	gameEnd(terminal.x, terminal.y);
+	//highscore and end
 }
 
 //Discarted Code

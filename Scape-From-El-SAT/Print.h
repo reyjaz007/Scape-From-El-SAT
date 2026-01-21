@@ -16,11 +16,13 @@ void printSpace(int x);
 
 void printLine(int x);
 
-void printFigure(int a, int b, int c, int d, int e, int f, int g, int h);
+void paintTerminal(int x, int y, int r, int g, int b);
+
+void printFigure(int a, int b, int c, int d, int e, int f, int g, int h, int x, int& y);
 
 void topSAT();
 
-void printSAT();
+void printSAT(int x, int y);
 
 void printMap(int x, int y);
 

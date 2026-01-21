@@ -49,7 +49,17 @@ void printLine(int x) {
 	}
 }
 
-void printFigure(int a, int b, int c, int d, int e, int f, int g, int h) {
+void paintTerminal(int x, int y, int r, int g, int b) {
+	gotoXY(0, 0);
+	setColorRGB(r, g, b);
+	for (int i = 0; i < y; i++) {
+		printLine(x);
+	}
+	resetColor();
+}
+
+void printFigure(int a, int b, int c, int d, int e, int f, int g, int h, int x, int& y) {
+	gotoXY(x, y);
 	printSpace(a);
 	printLine(b);
 	printSpace(c);
@@ -58,33 +68,34 @@ void printFigure(int a, int b, int c, int d, int e, int f, int g, int h) {
 	printLine(f);
 	printSpace(g);
 	printLine(h);
-	std::cout << std::endl;
+	printSpace(3);
+	y++;
 }
 
-void topSAT() {
+void topSAT(int x, int& y) {
 	for (int i = 0; i < 3; i++) {
-		printFigure(4, 6, 3, 6, 0, 0, 0, 0);
+		printFigure(4, 6, 3, 6, 0, 0, 0, 0, x, y);
 	}
-	std::cout << std::endl;
+	y++;
 }
 
-void printSAT() {
+void printSAT(int x, int y) {
 	setColorRGB(40, 50, 137);
 
-	topSAT();
-	topSAT();
-	printFigure(0, 6, 3, 6, 2, 6, 0, 0);
-	printFigure(0, 1, 8, 1, 4, 1, 4, 2);
-	printFigure(1, 4, 4, 6, 4, 2, 0, 0);
-	printFigure(5, 1, 3, 1, 4, 1, 4, 2);
-	printFigure(0, 6, 3, 1, 4, 1, 4, 2);
+	topSAT(x, y);
+	topSAT(x, y);
+	printFigure(0, 6, 3, 6, 2, 6, 0, 0, x, y);
+	printFigure(0, 1, 8, 1, 4, 1, 4, 2, x, y);
+	printFigure(1, 4, 4, 6, 4, 2, 0, 0, x, y);
+	printFigure(5, 1, 3, 1, 4, 1, 4, 2, x, y);
+	printFigure(0, 6, 3, 1, 4, 1, 4, 2, x, y);
 
 	resetColor();
 }
 
 void printMap(int x, int y) {
 	gotoXY(0, y / 2);
-	printSAT();
+	printSAT(x, y);
 	setColorRGB(96, 97, 102);
 	printLine(x);
 	resetColor();
