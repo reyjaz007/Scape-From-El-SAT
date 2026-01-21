@@ -72,6 +72,24 @@ void printFigure(int a, int b, int c, int d, int e, int f, int g, int h, int x, 
 	y++;
 }
 
+void printLargeFigure(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int x, int& y) {
+	gotoXY(x, y);
+	printSpace(a);
+	printLine(b);
+	printSpace(c);
+	printLine(d);
+	printSpace(e);
+	printLine(f);
+	printSpace(g);
+	printLine(h);
+	printSpace(i);
+	printLine(j);
+	printSpace(k);
+	printLine(j);
+	printSpace(3);
+	y++;
+}
+
 void topSAT(int x, int& y) {
 	for (int i = 0; i < 3; i++) {
 		printFigure(4, 6, 3, 6, 0, 0, 0, 0, x, y);
@@ -93,9 +111,31 @@ void printSAT(int x, int y) {
 	resetColor();
 }
 
+void printTHE(int x, int y) {
+	setColorRGB(156, 6, 6);
+
+	printLargeFigure(0, 7, 1, 1, 4, 1, 2, 5, 0, 0, 0, 0, x, y);
+	printLargeFigure(3, 1, 4, 1, 4, 1, 2, 1, 0, 0, 0, 0, x, y);
+	printLargeFigure(3, 1, 4, 6, 2, 4, 0, 0, 0, 0, 0, 0, x, y);
+	printLargeFigure(3, 1, 4, 1, 4, 1, 2, 1, 0, 0, 0, 0, x, y);
+	printLargeFigure(3, 1, 4, 1, 4, 1, 2, 5, 0, 0, 0, 0, x, y);
+}
+
+void printEND(int x, int y) {
+	setColorRGB(156, 6, 6);
+
+	printLargeFigure(0, 6, 2, 2, 3, 1, 2, 3, 0, 0, 0, 0, x, y);
+	printLargeFigure(0, 1, 7, 1, 1, 1, 2, 1, 2, 1, 2, 1, x, y);
+	printLargeFigure(0, 5, 3, 1, 2, 1, 1, 1, 2, 1, 2, 1, x, y);
+	printLargeFigure(0, 1, 7, 1, 2, 1, 1, 1, 2, 1, 2, 1, x, y);
+	printLargeFigure(0, 6, 2, 1, 3, 2, 2, 3, 0, 0, 0, 0, x, y);
+	resetColor();
+}
+
 void printMap(int x, int y) {
 	gotoXY(0, y / 2);
-	printSAT(x, y);
+	printSAT(0, y /2);
+	std::cout << std::endl;
 	setColorRGB(96, 97, 102);
 	printLine(x);
 	resetColor();

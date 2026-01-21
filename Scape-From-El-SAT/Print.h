@@ -24,6 +24,10 @@ void topSAT();
 
 void printSAT(int x, int y);
 
+void printTHE(int x, int y);
+
+void printEND(int x, int y);
+
 void printMap(int x, int y);
 
 void satAttack(int x, int y);

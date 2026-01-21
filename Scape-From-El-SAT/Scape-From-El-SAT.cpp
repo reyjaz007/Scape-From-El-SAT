@@ -49,13 +49,17 @@ void verifyinput(bool& jumping, bool& falling) {
 	}
 }
 
-void gameupdate(bool &attacking, int &attackTimer, int &attackX) {
+void gameupdate(bool &attacking, int &attackTimer, int &attackX, int& score) {
 	srand(time(nullptr));
 	if (attackX >= 100) {
 		attacking = false;
 		attackX = 0;
+		score += 100;
 	}
 	attackTimer >= 100 ? attacking = true, attackTimer = 0 : attackTimer += rand() % 50;
+	score++;
+	gotoXY(100, 0);
+	std::cout << score;
 }
 
 void renderGame(Character& you, Hitbox& player, Hitbox& attack, int& animation, int x, int y, int cX, int cY, int& attackX, int& attackY, bool attacking, bool& jumping, bool& falling, int& jump) {
@@ -101,9 +105,27 @@ void gameStart(int x, int y) {
 	system("cls");
 }
 
-void gameEnd(int x, int y) {
+void gameEnd(int x, int y, int score) {
+	Sleep(100);
+	system("cls");
+	Sleep(100);
+	printMap(x, y);
 	system("cls");
 
+
+	paintTerminal(x, y, 162, 184, 183);
+	setBackColorRGB(162, 184, 183);
+	printTHE((x / 2) - 11, (y / 2) - 12);
+	printEND((x / 2) - 11, (y / 2) - 6);
+	setBackColorRGB(162, 184, 183);
+	setColorRGB(58, 64, 63);
+
+	gotoXY((x / 2) - 9, (y / 2) + 2);
+	std::cout << "Your score is : " << score;
+	gotoXY((x / 2) - 16, (y / 2) + 5);
+	system("pause");
+	resetColor();
+	system("cls");
 }
 
 int main() {
@@ -147,13 +169,13 @@ int main() {
 
 	while (you.health >= 0) {//game loop
 		verifyinput(jumping, falling);
-		gameupdate(attacking, attackTimer, attackXY.x);
+		gameupdate(attacking, attackTimer, attackXY.x, score);
 		renderGame(you, player, attack, animation, terminal.x, terminal.y, character.x, character.y, attackXY.x, attackXY.y, attacking, jumping, falling, jump);
 		you.takeDamage(hitboxVerification(player, attack));
 		Sleep(100);
 	}
 
-	gameEnd(terminal.x, terminal.y);
+	gameEnd(terminal.x, terminal.y, score);
 	//highscore and end
 }
 
